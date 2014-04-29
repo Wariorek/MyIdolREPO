@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+  >
+    <context:annotation-config />
+    <context:component-scan base-package="foo.bar"/>
+
+
+    <bean id="piano"
+          class="foo.bar.Piano"
+            primary="true"/>
+
+    <bean id="saxophone"
+          class="foo.bar.Saxophone"
+            autowire-candidate="false"/>
+
+    <bean id="guitar"
+          class="foo.bar.Guitar">
+        <qualifier value="stringed"/>
+    </bean>
+
+    <bean id="instrument"
+          class="foo.bar.Saxophone"/>
+
+    <bean id="kenny"
+          class="foo.bar.Instrumentalist">
+        <property name="song" value="Jingle Bells"/>
+        <property name="instrument" >
+            <bean class="foo.bar.Saxophone"/>
+        </property>
+    </bean>
+
+    <bean id="kenny2"
+          class="foo.bar.Instrumentalist">
+        <property name="song" value="#{kenny.song}"/>
+    </bean>
+
+    <bean id="carl"
+        class="foo.bar.Instrumentalist">
+        <property name="song" value="#{kenny.song}"/>
+    </bean>
+
+    <bean id="hank"
+       class="foo.bar.OneManBand">
+       <property name="instruments">
+           <map>
+               <entry key="GUITAR" value-ref="guitar"/>
+               <entry key="PIANO" value-ref="piano"/>
+               <entry key="SAXOPHONE" value-ref="saxophone"/>
+           </map>
+       </property>
+    </bean>
+
+    <bean id="jim"
+          class="foo.bar.Instrumentalist"
+          p:song="Merry Christmas"
+          p:instrument ="#{piano}"/>
+
+    <bean id="theStage"
+          class = "foo.bar.Stage"
+          factory-method="getInstance"/>
+
+    <bean id="sonnet116"
+          class ="foo.bar.Sonnet116"/>
+
+    <bean id = "poeticDuke"
+          class = "foo.bar.PoeticJugler">
+        <constructor-arg value = "15" />
+        <constructor-arg ref = "sonnet116"/>
+    </bean>
+
+    <bean id="duke"
+          class="foo.bar.PoeticJugler"
+          autowire="constructor"/>
+
+
+</beans>
